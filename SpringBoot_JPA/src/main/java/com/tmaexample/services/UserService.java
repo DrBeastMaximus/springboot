@@ -24,7 +24,6 @@ public class UserService implements IUserService {
         List<UserDTO> rezult = new ArrayList<>();
         for (User user : users ){
             UserDTO usr = new UserDTO();
-            usr.setId(user.getId());
             usr.setEmail(usr.getEmail());
             usr.setName(usr.getName());
             rezult.add(usr);
@@ -37,7 +36,6 @@ public class UserService implements IUserService {
         if(user!=null)
             return null;
         UserDTO rezult = new UserDTO();
-            rezult.setId(user.getId());
             rezult.setEmail(user.getEmail());
             rezult.setName(user.getName());
         return rezult;

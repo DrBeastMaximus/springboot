@@ -6,10 +6,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 public class UserDTO {
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
 
     @Column(name = "name")
     private String name;
@@ -23,14 +19,6 @@ public class UserDTO {
     public UserDTO(String name, String email) {
         this.name = name;
         this.email = email;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
