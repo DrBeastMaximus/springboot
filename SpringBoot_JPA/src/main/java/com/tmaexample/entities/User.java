@@ -1,8 +1,11 @@
 package com.tmaexample.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "user")
@@ -10,7 +13,7 @@ public class User implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long uid;
 
     @Column(name = "name")
     private String name;
@@ -27,22 +30,35 @@ public class User implements Serializable {
     @Column(name="modified_at")
     private Date modified_at;
 
+    @Column(name = "password")
+    private String password;
+
+    @ManyToMany
+    @JsonIgnore
+    @JoinTable(name = "user_role",
+            joinColumns = @JoinColumn(name = "uid"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles;
+
     public User() {}
 
-    public User(String name, String email, String phone, Date created_at, Date modified_at) {
+    public User(Long id, String name, String email, String phone, Date created_at, Date modified_at, String password, Set<Role> roles) {
+        this.uid = id;
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.created_at = created_at;
         this.modified_at = modified_at;
+        this.password = password;
+        this.roles = roles;
     }
 
     public Long getId() {
-        return id;
+        return uid;
     }
 
     public void setId(Long id) {
-        this.id = id;
+        this.uid = id;
     }
 
     public String getName() {
@@ -83,5 +99,21 @@ public class User implements Serializable {
 
     public void setModified_at(Date modified_at) {
         this.modified_at = modified_at;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }

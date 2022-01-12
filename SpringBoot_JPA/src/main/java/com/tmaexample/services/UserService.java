@@ -1,20 +1,42 @@
 package com.tmaexample.services;
 
 import com.tmaexample.dto.UserDTO;
+import com.tmaexample.entities.Role;
 import com.tmaexample.entities.User;
+import com.tmaexample.repos.RoleRepository;
 import com.tmaexample.repos.UserRepository;
 import com.tmaexample.services.impl.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class UserService implements IUserService {
     @Autowired
     private UserRepository userRepo;
+
+    @Autowired
+    private RoleRepository roleRepo;
+
+    public String randomString(){
+        String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String lowerAlphabet = "abcdefghijklmnopqrstuvwxyz";
+        String numbers = "0123456789";
+        String alphaNumeric = upperAlphabet + lowerAlphabet + numbers;
+        StringBuilder sb = new StringBuilder();
+        Random random = new Random();
+        int length = 10;
+        for(int i = 0; i < length; i++) {
+            int index = random.nextInt(alphaNumeric.length());
+            char randomChar = alphaNumeric.charAt(index);
+            sb.append(randomChar);
+        }
+        String randomString = sb.toString();
+        return randomString;
+    }
 
     @Override
     public List<UserDTO> findAll(){
@@ -42,13 +64,41 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public User findLoginById(long id){
+        User user = userRepo.getOne(id);
+        if(user!=null)
+            return null;
+        return user;
+    }
+
+    @Override
     public User insert(UserDTO userDTO) {
         User user = new User();
+        Role userRole = roleRepo.getOne(Long.valueOf(2));
+        Set<Role> roles = Stream.of(userRole)
+                .collect(Collectors.toCollection(HashSet::new));
         user.setEmail(userDTO.getEmail());
         user.setName(userDTO.getName());
         user.setPhone("113");
         user.setCreated_at(new Date());
-        user.getModified_at(new Date());
+        user.setModified_at(new Date());
+        user.setPassword(randomString());
+        user.setRoles(roles);
+        return userRepo.save(user);
+    }
+    @Override
+    public User insertAdmin(UserDTO userDTO) {
+        User user = new User();
+        Role userRole = roleRepo.getOne(Long.valueOf(2));
+        Set<Role> roles = Stream.of(userRole)
+                .collect(Collectors.toCollection(HashSet::new));
+        user.setEmail(userDTO.getEmail());
+        user.setName(userDTO.getName());
+        user.setPhone("113");
+        user.setCreated_at(new Date());
+        user.setModified_at(new Date());
+        user.setPassword(randomString());
+        user.setRoles(roles);
         return userRepo.save(user);
     }
 
